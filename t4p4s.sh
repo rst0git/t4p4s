@@ -359,7 +359,7 @@ find_tool() {
     exit_on_error "1" "Cannot not find $(cc 2)$tool$nn tool"
 }
 
-PYTHON3=${PYTHON3-$(find_tool "." python3)}
+PYTHON3=python3
 
 # note: it is used with sudo
 MESON_CMD="$PYTHON3 -m mesonbuild.mesonmain"
@@ -447,10 +447,6 @@ ALL_COLOUR_NAMES=(action async bytes control core default error expected extern 
 # Set defaults
 
 nn="\033[0m"
-
-# Check if configuration is valid
-[ "${P4C}" == "" ] && exit_program "\$P4C not defined"
-[ "$ARCH" == "dpdk" ] && [ "${RTE_SDK}" == "" ] && exit_program "\$RTE_SDK not defined"
 
 # --------------------------------------------------------------------
 # Parse opts from files and command line
@@ -627,14 +623,14 @@ if [ "$(optvalue p4)" == off ] && [ "$(optvalue c)" == off ] && [ "$(optvalue ru
     OPTS[run]=on
 fi
 
-T4P4S_CC=${T4P4S_CC-$(find_tool "-" clang gcc)}
+T4P4S_CC=gcc
 if [[ ! "$T4P4S_CC" =~ "clang" ]]; then
     # note: when using gcc, only lld seems to be supported, not lld-VSN
-    T4P4S_LD=${T4P4S_LD-$(find_tool lld bfd gold)}
+    T4P4S_LD=lld
 else
-    T4P4S_LD=${T4P4S_LD-$(find_tool "-" lld bfd gold)}
+    T4P4S_LD=lld
 fi
-DEBUGGER=${DEBUGGER-$(find_tool "-" lldb gdb)}
+DEBUGGER=gdb
 
 verbosemsg "Using $(cc 0)CC$nn=$(cc 1)$T4P4S_CC$nn, $(cc 0)LD$nn=$(cc 1)$T4P4S_LD$nn, $(cc 0)PYTHON3$nn=$(cc 1)${PYTHON3}$nn, $(cc 0)DBG$nn=$(cc 1)${DEBUGGER}$nn"
 
@@ -681,11 +677,6 @@ fi
 # --------------------------------------------------------------------
 
 verbosemsg "Options: $(print_opts)"
-
-# Phase 0a: Check for required programs
-if [ "$(optvalue c)" != off -a ! -f "$P4C/build/p4test" ]; then
-    exit_program "cannot find P4C compiler at $(cc 1)\$P4C/build/p4test$nn"
-fi
 
 
 # Phase 0b: If a phase with root access is needed, ask for it now
@@ -833,7 +824,7 @@ executable(
     gnu_symbol_visibility : 'hidden',
     include_directories   : include_dirs,
     dependencies          : all_dependencies,
-    link_args             : ['/usr/local/lib/x86_64-linux-gnu/librte_bus_vdev.so']
+    link_args             : ['/usr/lib64/librte_bus_vdev.so']
 )
 EOT
 

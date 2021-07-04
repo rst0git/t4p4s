@@ -1,8 +1,4 @@
 
-[ "$P4C" == "" ] && echo The environment variable \$P4C has to be defined to run $0 && exit 1
-[ "$RTE_SDK" == "" ] && echo The environment variable \$RTE_SDK has to be defined to run $0 && exit 1
-
-
 declare -A exitcode
 declare -A skips
 declare -A skipped
@@ -104,7 +100,7 @@ if [ "$PRECOMPILE" == "yes" ]; then
         [ "${ext_p4[$TESTCASE]}" == "p4_14" ] && P4VSN=14
         [ "${ext_p4[$TESTCASE]}" == "p4"    ] && P4VSN=16
 
-        $P4C/build/p4test "${src_p4[$TESTCASE]}" -I $P4C/p4include --toJSON ${TARGET_JSON} --Wdisable --p4v $P4VSN --ndebug && \
+        p4test "${src_p4[$TESTCASE]}" -I /usr/local/share/p4c/p4include/ --toJSON ${TARGET_JSON} --Wdisable --p4v $P4VSN --ndebug && \
             gzip ${TARGET_JSON} && \
             mv ${TARGET_JSON}.gz ${TARGET_JSON} && \
             echo -n "|"  &
