@@ -344,7 +344,7 @@ echo -e "-------- Installation may take several minutes for each of the followin
 
 # Download libraries
 if [ "$INSTALL_STAGE1_PACKAGES" == "yes" ]; then
-    sudo apt-get update >$(logfile "apt") 2>&1 && sudo apt-get -y install $REQUIRED_PACKAGES $OPT_PACKAGES >>$(logfile "apt") 2>&1 &
+    sudo apt-get update >$(logfile "apt") 2>&1 && sudo apt-get --fix-missing -y install $REQUIRED_PACKAGES $OPT_PACKAGES >>$(logfile "apt") 2>&1 &
     WAITPROC_APTGET="$!"
     [ "$PARALLEL_INSTALL" != "yes" ] && wait "$WAITPROC_APTGET" >/dev/null 2>&1
 fi
