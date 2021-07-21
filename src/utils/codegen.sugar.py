@@ -1068,6 +1068,10 @@ def gen_format_call_extern(args, mname, m, funname_override=None):
 
     buf = None
 
+    if funname_override=="update_checksum": #v1model
+        fmt_args = [fmt_arg for arg in args if not arg.is_vec() for fmt_arg in [gen_format_method_parameter(arg, buf)] if fmt_arg is not None]
+        #pre[   if ${fmt_args[0]} {
+        #aft[   }
     listexprs = args.map('expression').filter('node_type', 'ListExpression')
     if len(listexprs) > 0:
         lec = listexprs[0].components

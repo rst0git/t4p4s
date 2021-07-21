@@ -242,7 +242,7 @@ control MyEgress(inout headers hdr,
 
 control MyComputeChecksum(inout headers hdr, inout metadata meta) {
      apply {
-	/*update_checksum(
+	update_checksum(
 	    hdr.icmp.isValid(),
             {
               hdr.icmp.icmp_type,
@@ -253,7 +253,7 @@ control MyComputeChecksum(inout headers hdr, inout metadata meta) {
             },
               hdr.icmp.checksum,
               HashAlgorithm.csum16);
-*/
+
     }
 }
 
